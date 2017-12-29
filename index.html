@@ -15,7 +15,7 @@
 
   document.getElementById('login').onclick = function() {
     var w = window.open("https://id.nctu.edu.tw/o/authorize/?client_id=H2HBv30BWAZc3ji9Y6faYKEGrHWwVfGFaSyG0EqS&response_type=code&scope=profile");
-    this.oldHash = window.location.hash;
+    this.oldHash = w.hash;
     this.Check;
 
     var that = this;
