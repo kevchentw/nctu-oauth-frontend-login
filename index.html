@@ -11,23 +11,28 @@
 </body>
 
 <script>
-
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
 
   document.getElementById('login').onclick = function() {
     var w = window.open("https://id.nctu.edu.tw/o/authorize/?client_id=H2HBv30BWAZc3ji9Y6faYKEGrHWwVfGFaSyG0EqS&response_type=code&scope=profile");
-    this.oldHash = w.hash;
-    this.Check;
-
+    var checker_interval;
     var that = this;
     var detect = function(){
-        console.log(w.location);
-        if(that.oldHash!=w.location.hash){
-            // alert("HASH CHANGED - new has" + w.location.hash);
-            console.log(w.location);
-            that.oldHash = w.location.hash;
+        var code = getParameterByName("code", w.location.href);
+        if(code) {
+          console.log(code)
+          window.clearInterval(checker_interval);
         }
     };
-    this.Check = setInterval(function(){ detect() }, 100);
+    checker_interval = setInterval(function(){ detect() }, 100);
   }
 
 </script>
