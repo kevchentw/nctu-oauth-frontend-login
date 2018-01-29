@@ -6,6 +6,7 @@
 <body>
 
 <button id="login">Login NCTU OAuth</button>
+<p id="res"></p>
 
 
 </body>
@@ -22,13 +23,61 @@
   }
 
   document.getElementById('login').onclick = function() {
-    var w = window.open("https://id.nctu.edu.tw/o/authorize/?client_id=H2HBv30BWAZc3ji9Y6faYKEGrHWwVfGFaSyG0EqS&response_type=code&scope=profile");
+    var w = window.open("http://140.113.199.100:9000/o/authorize/?client_id=pBIt4PvHdl3j2BXnNoZWUwy5nKCaoHqtIaw8jpsA&response_type=code&scope=dorm_type%20dorm_room_number");
     var checker_interval;
     var that = this;
     var detect = function(){
         var code = getParameterByName("code", w.location.href);
         if(code) {
           console.log(code)
+          var request = new XMLHttpRequest();
+          // request.open('POST', 'https://id.nctu.edu.tw/o/token/', true);
+
+          var data = new FormData();
+          data.append('grant_type', 'authorization_code');
+          data.append('code', code);
+          data.append('client_id', 'pBIt4PvHdl3j2BXnNoZWUwy5nKCaoHqtIaw8jpsA');
+          data.append('redirect_uri', 'https://kevchentw.github.io/nctu-oauth-frontend-login/');
+
+          fetch("http://140.113.199.100:9000/o/token/", {
+            method: "POST",
+            body: data
+          }).then(function(res) {
+            if (res.ok) {
+              res.json().then(function(data) {
+                console.log(data);
+
+
+                fetch("http://140.113.199.100:9000/api/dorm_room_number/", {
+                  headers: {
+                    'Authorization': "Bearer " + data.access_token
+                  }
+                }).then(function(r1) {
+                  if (r1.ok) {
+                    r1.json().then(function(d1) {
+                      document.getElementById("res").innerHTML += d1;
+                    })
+                  }
+                })
+
+                fetch("http://140.113.199.100:9000/api/dorm_room_number/", {
+                  headers: {
+                    'Authorization': "Bearer " + data.access_token
+                  }
+                }).then(function(r2) {
+                  if (r2.ok) {
+                    r1.json().then(function(d2) {
+                      document.getElementById("res").innerHTML += d2;
+                    })
+                  }
+                })
+
+
+
+              });
+            }
+          })
+
           window.clearInterval(checker_interval);
         }
     };
