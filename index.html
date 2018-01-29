@@ -55,7 +55,7 @@
                 }).then(function(r1) {
                   if (r1.ok) {
                     r1.json().then(function(d1) {
-                      document.getElementById("res").innerHTML += d1;
+                      document.getElementById("res").innerHTML += JSON.stringify(d1);
                     })
                   }
                 })
@@ -66,8 +66,8 @@
                   }
                 }).then(function(r2) {
                   if (r2.ok) {
-                    r1.json().then(function(d2) {
-                      document.getElementById("res").innerHTML += d2;
+                    r2.json().then(function(d2) {
+                      document.getElementById("res").innerHTML += JSON.stringify(d2);
                     })
                   }
                 })
