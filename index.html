@@ -22,13 +22,20 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
+  var w;
+
   document.getElementById('login').onclick = function() {
-    var w = window.open("https://id.nctu.edu.tw/o/authorize/?client_id=H2HBv30BWAZc3ji9Y6faYKEGrHWwVfGFaSyG0EqS&response_type=code&scope=dorm_type%20dorm_room_number");
+    w = window.open("https://id.nctu.edu.tw/o/authorize/?client_id=H2HBv30BWAZc3ji9Y6faYKEGrHWwVfGFaSyG0EqS&response_type=code&scope=dorm_type%20dorm_room_number");
   }
   var checker_interval;
   var that = this;
   var detect = function(){
-      var code = getParameterByName("code", w.location.href);
+      var code;
+      if(w){
+        code = getParameterByName("code", w.location.href);
+      }
+      code = getParameterByName("code");
+
       if(code) {
         console.log(code)
         var request = new XMLHttpRequest();
